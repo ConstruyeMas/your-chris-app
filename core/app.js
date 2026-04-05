@@ -148,9 +148,9 @@
     const floatingChrisProfiles = Object.freeze({
       "screen-nombre": {
         image: "assets/chris/chris-nombre.png",
-        right: "clamp(12px, 2.4vw, 24px)",
-        bottom: "clamp(72px, 9vh, 116px)",
-        width: "clamp(104px, 14vw, 176px)",
+        right: "clamp(14px, 2.4vw, 28px)",
+        bottom: "clamp(94px, 12vh, 148px)",
+        width: "clamp(98px, 13vw, 164px)",
         translateX: "0px",
         translateY: "0px",
         rotate: "-1deg"

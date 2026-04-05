@@ -201,6 +201,7 @@ img {
 
 #screen-nombre .screen-body {
   align-items: start;
+  padding-top: clamp(88px, 13vh, 156px);
 }
 
 .glass-card,
@@ -226,6 +227,7 @@ img {
   width: min(100%, 560px);
   padding: clamp(16px, 2.3vw, 22px) clamp(18px, 2.8vw, 24px);
   gap: 12px;
+  margin-top: 0;
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.78);
   box-shadow:
@@ -281,6 +283,10 @@ img {
   background: rgba(255, 255, 255, 0.78);
 }
 
+#screen-nombre .text-input::placeholder {
+  color: #918370;
+}
+
 .text-input::placeholder {
   color: #9f9082;
 }
@@ -304,7 +310,7 @@ img {
 }
 
 #screen-nombre .screen-footer {
-  padding-right: clamp(96px, 13vw, 168px);
+  padding-right: clamp(148px, 19vw, 236px);
 }
 
 .slider-track {
@@ -317,7 +323,8 @@ img {
 }
 
 #screen-nombre .slider-track {
-  width: min(100%, 460px);
+  width: min(100%, 400px);
+  margin-inline: 0 auto;
 }
 
 .slider-track::before,
@@ -1067,7 +1074,15 @@ img {
 }
 
 .chris-floating[data-screen="screen-nombre"] img {
-  filter: drop-shadow(0 16px 26px rgba(35, 23, 14, 0.16));
+  background: transparent;
+  mix-blend-mode: normal;
+  filter: none;
+}
+
+.chris-floating[data-screen="screen-nombre"] .chris-floating-shell {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
 }
 
 .chris-floating.is-swapping img {
@@ -1365,8 +1380,13 @@ body.history-open .history-backdrop {
     padding-right: 0;
   }
 
+  #screen-nombre .screen-body {
+    padding-top: clamp(48px, 8vh, 88px);
+  }
+
   #screen-nombre .slider-track {
-    width: min(100%, 420px);
+    width: min(100%, 360px);
+    margin-inline: auto;
   }
 
   .slider-label {
