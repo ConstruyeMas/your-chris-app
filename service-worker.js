@@ -1,4 +1,4 @@
-const CACHE_NAME = "your-chris-app-shell-v3";
+const CACHE_NAME = "your-chris-app-shell-v4";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -21,10 +21,20 @@ const APP_SHELL = [
   "./screens/qr.js",
   "./screens/confirmacion.js",
   "./assets/chris/chris-avatar.png",
+  "./assets/chris/chris-nombre.png",
+  "./assets/chris/chris-concepto.png",
+  "./assets/chris/chris-monto.png",
+  "./assets/chris/chris-premium.png",
+  "./assets/chris/chris-emitir.png",
+  "./assets/chris/chris-confirmacion.png",
   "./assets/icons/app-icon-180.png",
+  "./assets/icons/app-icon-180.png?v=20260404",
   "./assets/icons/app-icon-192.png",
+  "./assets/icons/app-icon-192.png?v=20260404",
   "./assets/icons/app-icon-512.png",
+  "./assets/icons/app-icon-512.png?v=20260404",
   "./assets/icons/app-icon-1024.png",
+  "./assets/icons/app-icon-1024.png?v=20260404",
   "./assets/icons/slider-chris.png",
   "./assets/themes/nombre.png",
   "./assets/themes/concepto.png",

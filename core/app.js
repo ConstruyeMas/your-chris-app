@@ -81,7 +81,8 @@
       historyCount: document.getElementById("historyCount"),
       historyOpenButtons: document.querySelectorAll("[data-history-open]"),
       chrisFloating: {
-        root: document.getElementById("chris-floating")
+        root: document.getElementById("chris-floating"),
+        image: document.querySelector("#chris-floating img")
       },
       inputs: {
         nombre: document.getElementById("inputNombre"),
@@ -140,8 +141,13 @@
       splash: elements.splash
     });
 
+    if (elements.chrisFloating.image) {
+      elements.chrisFloating.image.dataset.currentSrc = elements.chrisFloating.image.getAttribute("src") || "";
+    }
+
     const floatingChrisProfiles = Object.freeze({
       "screen-nombre": {
+        image: "assets/chris/chris-nombre.png",
         right: "clamp(18px, 3vw, 40px)",
         bottom: "clamp(26px, 4vh, 44px)",
         width: "clamp(128px, 17vw, 228px)",
@@ -150,6 +156,7 @@
         rotate: "-1deg"
       },
       "screen-concepto": {
+        image: "assets/chris/chris-concepto.png",
         right: "clamp(16px, 2.8vw, 36px)",
         bottom: "clamp(34px, 5vh, 54px)",
         width: "clamp(130px, 17vw, 230px)",
@@ -158,14 +165,25 @@
         rotate: "1deg"
       },
       "screen-monto": {
+        image: "assets/chris/chris-monto.png",
         right: "clamp(18px, 3vw, 38px)",
         bottom: "clamp(30px, 4vh, 48px)",
-        width: "clamp(132px, 18vw, 236px)",
+        width: "clamp(138px, 19vw, 244px)",
         translateX: "0px",
         translateY: "0px",
         rotate: "-2deg"
       },
+      "screen-premium": {
+        image: "assets/chris/chris-premium.png",
+        left: "clamp(12px, 3vw, 34px)",
+        bottom: "clamp(12px, 2vh, 26px)",
+        width: "clamp(170px, 21vw, 280px)",
+        translateX: "0px",
+        translateY: "0px",
+        rotate: "0deg"
+      },
       "screen-preview": {
+        image: "assets/chris/chris-emitir.png",
         left: "clamp(18px, 3vw, 40px)",
         bottom: "clamp(22px, 3vh, 34px)",
         width: "clamp(118px, 16vw, 210px)",
@@ -174,6 +192,7 @@
         rotate: "2deg"
       },
       "screen-confirmacion": {
+        image: "assets/chris/chris-confirmacion.png",
         left: "clamp(18px, 3vw, 40px)",
         bottom: "clamp(18px, 3vh, 30px)",
         width: "clamp(114px, 15vw, 198px)",
@@ -183,10 +202,45 @@
       }
     });
 
-    function renderFloatingChris(screenId) {
+    function setFloatingChrisHost(host) {
       const root = elements.chrisFloating.root;
 
-      if (!root) {
+      if (!root || !host || root.parentElement === host) {
+        return;
+      }
+
+      host.appendChild(root);
+    }
+
+    function swapFloatingChrisImage(nextImage) {
+      const root = elements.chrisFloating.root;
+      const image = elements.chrisFloating.image;
+
+      if (!root || !image || !nextImage) {
+        return;
+      }
+
+      if (image.dataset.currentSrc === nextImage) {
+        root.classList.remove("is-swapping");
+        return;
+      }
+
+      const clearSwapState = () => {
+        root.classList.remove("is-swapping");
+      };
+
+      root.classList.add("is-swapping");
+      image.addEventListener("load", clearSwapState, { once: true });
+      image.addEventListener("error", clearSwapState, { once: true });
+      image.dataset.currentSrc = nextImage;
+      image.src = nextImage;
+    }
+
+    function renderFloatingChris(screenId) {
+      const root = elements.chrisFloating.root;
+      const image = elements.chrisFloating.image;
+
+      if (!root || !image) {
         return;
       }
 
@@ -197,6 +251,8 @@
         return;
       }
 
+      swapFloatingChrisImage(profile.image);
+      image.alt = "";
       root.style.setProperty("--chris-floating-left", profile.left || "auto");
       root.style.setProperty("--chris-floating-right", profile.right || "auto");
       root.style.setProperty("--chris-floating-top", profile.top || "auto");
@@ -237,6 +293,8 @@
         suscripcion.render();
       }
     });
+    const defaultChrisHost = elements.chrisFloating.root ? elements.chrisFloating.root.parentElement : null;
+    let navigator = null;
 
     const formulario = ChrisApp.screens.formulario.init({
       state,
@@ -246,7 +304,18 @@
     const suscripcion = ChrisApp.screens.suscripcion.init({
       state,
       elements: elements.suscripcion,
-      premiumManager
+      premiumManager,
+      onOpen() {
+        setFloatingChrisHost(elements.suscripcion.root);
+        renderFloatingChris("screen-premium");
+      },
+      onClose() {
+        if (defaultChrisHost) {
+          setFloatingChrisHost(defaultChrisHost);
+        }
+
+        renderFloatingChris(navigator ? navigator.getCurrentId() : "screen-nombre");
+      }
     });
 
     const preview = ChrisApp.screens.preview.init({
@@ -291,7 +360,7 @@
       closeHistory();
     });
 
-    const navigator = ChrisApp.navigation.createNavigator({
+    navigator = ChrisApp.navigation.createNavigator({
       screens: [
         "screen-nombre",
         "screen-concepto",

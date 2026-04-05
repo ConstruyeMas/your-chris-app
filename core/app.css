@@ -467,12 +467,14 @@ img {
 .premium-backdrop {
   position: absolute;
   inset: 0;
+  z-index: 0;
   background: rgba(28, 19, 13, 0.38);
   backdrop-filter: blur(10px);
 }
 
 .premium-dialog {
   position: relative;
+  z-index: 2;
   min-height: 100dvh;
   display: grid;
   place-items: center;
@@ -1018,19 +1020,27 @@ img {
 }
 
 .chris-floating-shell {
-  overflow: hidden;
-  border-radius: 34px;
-  background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 28px 52px rgba(35, 23, 14, 0.16);
+  overflow: visible;
 }
 
 .chris-floating img {
+  display: block;
   width: 100%;
   height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 22px 34px rgba(35, 23, 14, 0.22));
+  transition: opacity 220ms ease;
 }
 
-body.premium-open .chris-floating,
+.chris-floating.is-swapping img {
+  opacity: 0.18;
+}
+
+.premium-overlay .chris-floating {
+  position: absolute;
+  z-index: 1;
+}
+
 body.history-open .chris-floating {
   opacity: 0;
   transform:

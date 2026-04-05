@@ -16,6 +16,8 @@
     const state = context.state;
     const elements = context.elements;
     const premiumManager = context.premiumManager;
+    const onOpen = typeof context.onOpen === "function" ? context.onOpen : null;
+    const onClose = typeof context.onClose === "function" ? context.onClose : null;
     let closeTimer = null;
 
     function showAdvanceRequired() {
@@ -66,6 +68,9 @@
       elements.root.hidden = false;
       elements.root.setAttribute("aria-hidden", "false");
       document.body.classList.add("premium-open");
+      if (onOpen) {
+        onOpen();
+      }
 
       window.requestAnimationFrame(() => {
         elements.root.classList.add("is-open");
@@ -80,6 +85,9 @@
       elements.root.classList.remove("is-open");
       elements.root.setAttribute("aria-hidden", "true");
       document.body.classList.remove("premium-open");
+      if (onClose) {
+        onClose();
+      }
       window.clearTimeout(closeTimer);
       closeTimer = window.setTimeout(() => {
         elements.root.hidden = true;
