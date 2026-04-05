@@ -149,8 +149,8 @@
       "screen-nombre": {
         image: "assets/chris/chris-nombre.png",
         right: "clamp(14px, 2.4vw, 28px)",
-        bottom: "clamp(94px, 12vh, 148px)",
-        width: "clamp(98px, 13vw, 164px)",
+        bottom: "clamp(108px, 14vh, 164px)",
+        width: "clamp(94px, 12.4vw, 154px)",
         translateX: "0px",
         translateY: "0px",
         rotate: "-1deg"

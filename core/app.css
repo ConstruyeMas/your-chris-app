@@ -201,7 +201,7 @@ img {
 
 #screen-nombre .screen-body {
   align-items: start;
-  padding-top: clamp(88px, 13vh, 156px);
+  padding-top: clamp(164px, 22vh, 274px);
 }
 
 .glass-card,
@@ -310,7 +310,8 @@ img {
 }
 
 #screen-nombre .screen-footer {
-  padding-right: clamp(148px, 19vw, 236px);
+  padding-right: clamp(146px, 19vw, 226px);
+  justify-items: end;
 }
 
 .slider-track {
@@ -323,8 +324,8 @@ img {
 }
 
 #screen-nombre .slider-track {
-  width: min(100%, 400px);
-  margin-inline: 0 auto;
+  width: min(70%, 360px);
+  margin-inline: auto 0;
 }
 
 .slider-track::before,
@@ -1083,6 +1084,7 @@ img {
   background: transparent;
   border: 0;
   box-shadow: none;
+  backdrop-filter: none;
 }
 
 .chris-floating.is-swapping img {
@@ -1381,12 +1383,12 @@ body.history-open .history-backdrop {
   }
 
   #screen-nombre .screen-body {
-    padding-top: clamp(48px, 8vh, 88px);
+    padding-top: clamp(110px, 17vh, 180px);
   }
 
   #screen-nombre .slider-track {
-    width: min(100%, 360px);
-    margin-inline: auto;
+    width: min(70%, 280px);
+    margin-inline: auto 0;
   }
 
   .slider-label {
