@@ -1,12 +1,15 @@
-const CACHE_NAME = "your-chris-app-shell-v6";
+const CACHE_NAME = "your-chris-app-shell-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./App_Recibo_Themes.html",
+  "./App_Recibo_Themes.html?v=26a5d77",
   "./manifest.webmanifest",
   "./config/shared-config.js",
   "./core/app.css",
+  "./core/app.css?v=26a5d77",
   "./core/app.js",
+  "./core/app.js?v=26a5d77",
   "./core/config.js",
   "./core/storage.js",
   "./core/receipts.js",
