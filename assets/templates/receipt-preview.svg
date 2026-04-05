@@ -1,0 +1,25 @@
+<svg width="900" height="1280" viewBox="0 0 900 1280" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="110" y1="70" x2="770" y2="1220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE1EA"/>
+      <stop offset="0.55" stop-color="#FFC9DB"/>
+      <stop offset="1" stop-color="#FFBDD4"/>
+    </linearGradient>
+    <linearGradient id="card" x1="176" y1="134" x2="736" y2="1122" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8FB" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#FFF2F7" stop-opacity="0.92"/>
+    </linearGradient>
+  </defs>
+  <rect width="900" height="1280" rx="60" fill="url(#bg)"/>
+  <circle cx="788" cy="182" r="118" fill="#FFFFFF" fill-opacity="0.18"/>
+  <circle cx="128" cy="1096" r="154" fill="#FFFFFF" fill-opacity="0.18"/>
+  <path d="M78 176C78 126.294 118.294 86 168 86H732C781.706 86 822 126.294 822 176V1104C822 1153.71 781.706 1194 732 1194H168C118.294 1194 78 1153.71 78 1104V176Z" fill="url(#card)"/>
+  <path d="M78 176C78 126.294 118.294 86 168 86H732C781.706 86 822 126.294 822 176V360H78V176Z" fill="#F26A8D" fill-opacity="0.22"/>
+  <path d="M138 444H762" stroke="#E6A2B9" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 18"/>
+  <path d="M138 684H762" stroke="#E6A2B9" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 18"/>
+  <path d="M138 922H762" stroke="#E6A2B9" stroke-width="4" stroke-linecap="round" stroke-dasharray="12 18"/>
+  <rect x="128" y="142" width="208" height="56" rx="28" fill="#FFF9FB"/>
+  <rect x="128" y="1020" width="246" height="60" rx="30" fill="#FFF9FB"/>
+  <circle cx="716" cy="166" r="24" fill="#FFF5F8"/>
+  <circle cx="756" cy="166" r="24" fill="#FFF5F8"/>
+</svg>

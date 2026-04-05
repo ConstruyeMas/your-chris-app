@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Your CHRIS App">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#ef7f25">
+  <title>Your CHRIS App</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/app-icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/app-icon-180.png">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="assets/icons/app-icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="core/app.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <script src="core/config.js" defer></script>
+  <script src="core/storage.js" defer></script>
+  <script src="core/receipts.js" defer></script>
+  <script src="core/premium.js" defer></script>
+  <script src="core/themes.js" defer></script>
+  <script src="core/navigation.js" defer></script>
+  <script src="core/slider.js" defer></script>
+  <script src="screens/splash.js" defer></script>
+  <script src="screens/formulario.js" defer></script>
+  <script src="screens/suscripcion.js" defer></script>
+  <script src="screens/preview.js" defer></script>
+  <script src="screens/qr.js" defer></script>
+  <script src="screens/confirmacion.js" defer></script>
+  <script src="core/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <div id="splashScreen" class="splash-screen is-visible">
+      <div class="splash-card">
+        <div class="splash-avatar-wrap">
+          <img src="assets/chris/chris-avatar.png" alt="Avatar de CHRIS">
+        </div>
+        <div>
+          <h1 class="splash-title">Your CHRIS App</h1>
+          <p class="splash-copy">CHRIS te acompana a generar recibos claros, rapidos y consistentes.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="historyBackdrop" class="history-backdrop"></div>
+    <aside id="historyPanel" class="history-panel" aria-hidden="true">
+      <div class="history-header">
+        <div>
+          <h2>Historial local</h2>
+          <div id="historyCount" class="history-info">0 registros guardados</div>
+        </div>
+        <button id="historyClose" class="icon-button" type="button" aria-label="Cerrar historial">×</button>
+      </div>
+      <div class="history-info">
+        Se almacenan nombre, concepto, monto, fecha, folio y estado premium en este navegador para consulta rapida.
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </aside>
+
+    <main class="app-stage">
+      <section id="screen-nombre" class="screen is-active" aria-hidden="false">
+        <div class="screen-background">
+          <img data-background-image alt="">
+        </div>
+        <div class="screen-frame">
+          <header class="screen-header">
+            <div class="header-copy">
+              <p class="screen-kicker">Paso 1 de 6</p>
+              <h1 class="screen-title">A nombre de quien?</h1>
+              <p class="screen-copy">Comenzamos con el cliente para construir el recibo desde una base clara y reusable.</p>
+            </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body">
+            <div class="glass-card">
+              <div class="assistant-chip">
+                <img src="assets/chris/chris-avatar.png" alt="">
+                <div>
+                  <strong>CHRIS</strong>
+                  <span>Tu guia visual en cada pantalla.</span>
+                </div>
+              </div>
+              <label class="field-group" for="inputNombre">
+                <span class="field-label">Nombre del cliente</span>
+                <input id="inputNombre" class="text-input" type="text" placeholder="Escribe el nombre completo" autocomplete="off">
+              </label>
+            </div>
+          </div>
+          <div class="screen-footer">
+            <div class="slider-track" data-slider data-slider-action="next">
+              <div class="slider-fill" data-slider-fill></div>
+              <div class="slider-label">Desliza para continuar</div>
+              <div class="slider-thumb" data-slider-thumb>
+                <img src="assets/icons/slider-chris.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-concepto" class="screen" aria-hidden="true">
+        <div class="screen-background">
+          <img data-background-image alt="">
+        </div>
+        <div class="screen-frame">
+          <header class="screen-header">
+            <div class="header-copy">
+              <p class="screen-kicker">Paso 2 de 6</p>
+              <h1 class="screen-title">Que estas cobrando?</h1>
+              <p class="screen-copy">Define el concepto del recibo para conservar un historial ordenado y facil de consultar.</p>
+            </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body">
+            <div class="glass-card">
+              <div class="assistant-chip">
+                <img src="assets/chris/chris-avatar.png" alt="">
+                <div>
+                  <strong>Detalle preciso</strong>
+                  <span>Un concepto claro evita ambiguedades despues.</span>
+                </div>
+              </div>
+              <label class="field-group" for="inputConcepto">
+                <span class="field-label">Concepto</span>
+                <input id="inputConcepto" class="text-input" type="text" placeholder="Ej. Renta, anticipo, materiales" autocomplete="off">
+              </label>
+            </div>
+          </div>
+          <div class="screen-footer">
+            <div class="slider-track" data-slider data-slider-action="next">
+              <div class="slider-fill" data-slider-fill></div>
+              <div class="slider-label">Siguiente paso</div>
+              <div class="slider-thumb" data-slider-thumb>
+                <img src="assets/icons/slider-chris.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-monto" class="screen" aria-hidden="true">
+        <div class="screen-background">
+          <img data-background-image alt="">
+        </div>
+        <div class="screen-frame">
+          <header class="screen-header">
+            <div class="header-copy">
+              <p class="screen-kicker">Paso 3 de 6</p>
+              <h1 class="screen-title">Define el monto</h1>
+              <p class="screen-copy">El sistema formatea el valor y lo prepara para preview, output real, QR e historial local.</p>
+            </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body">
+            <div class="glass-card">
+              <div class="assistant-chip">
+                <img src="assets/chris/chris-avatar.png" alt="">
+                <div>
+                  <strong>Formato automatico</strong>
+                  <span>Ingresa solo numeros y la app normaliza el monto.</span>
+                </div>
+              </div>
+              <label class="field-group" for="inputMonto">
+                <span class="field-label">Monto</span>
+                <input id="inputMonto" class="text-input" type="text" placeholder="Ej. 2500" inputmode="numeric" autocomplete="off">
+              </label>
+            </div>
+          </div>
+          <div class="screen-footer">
+            <div class="slider-track" data-slider data-slider-action="next">
+              <div class="slider-fill" data-slider-fill></div>
+              <div class="slider-label">Revisar acceso</div>
+              <div class="slider-thumb" data-slider-thumb>
+                <img src="assets/icons/slider-chris.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-suscripcion" class="screen" aria-hidden="true">
+        <div class="screen-background">
+          <img data-background-image alt="">
+        </div>
+        <div class="screen-frame">
+          <header class="screen-header">
+            <div class="header-copy">
+              <p class="screen-kicker">Paso 4 de 6</p>
+              <h1 class="screen-title">Activa tu acceso premium</h1>
+              <p class="screen-copy">La activacion premium es mensual, dura 30 dias y solo se confirma despues de validar el pago aprobado.</p>
+            </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body subscription-layout">
+            <div class="subscription-card">
+              <div class="subscription-copy">
+                <div class="subscription-eyebrow">Acceso premium mensual</div>
+                <div class="premium-hero">
+                  <div>
+                    <h2 id="premiumPlanName">Your CHRIS App Premium Mensual</h2>
+                    <p class="premium-copy">Recibos listos para compartir, flujo premium validado y continuidad mensual sin activar manualmente por default.</p>
+                  </div>
+                  <div class="premium-price-block">
+                    <strong id="premiumPlanPrice">$149 MXN / mes</strong>
+                    <span id="premiumPlanCycle">Activacion mensual por 30 dias</span>
+                  </div>
+                </div>
+                <ul class="benefits-list">
+                  <li>Generacion de recibos premium</li>
+                  <li>Acceso mensual con validacion real de pago</li>
+                  <li>Historial local con estado premium por emision</li>
+                </ul>
+                <div class="premium-status-card">
+                  <div class="premium-status-row">
+                    <span class="status-kicker">Estado premium</span>
+                    <strong id="premiumStatusBadge" class="status-badge" data-status="inactive">Normal</strong>
+                  </div>
+                  <p id="premiumStatusDetail" class="premium-status-copy">Sin API local activa. Inicia el servidor para probar la validacion premium.</p>
+                  <div class="premium-meta-grid">
+                    <div class="summary-row">
+                      <span>Modo</span>
+                      <strong id="premiumPaymentMode">Modo prueba local</strong>
+                    </div>
+                    <div class="summary-row">
+                      <span>Referencia MP</span>
+                      <strong id="premiumAccountReference">722969010773010312</strong>
+                    </div>
+                    <div class="summary-row">
+                      <span>Activacion</span>
+                      <strong id="premiumActivationDate">Sin activar</strong>
+                    </div>
+                    <div class="summary-row">
+                      <span>Vencimiento</span>
+                      <strong id="premiumExpirationDate">Sin activar</strong>
+                    </div>
+                    <div class="summary-row premium-full-width">
+                      <span>Referencia de pago</span>
+                      <strong id="premiumPaymentReference">Se asigna al aprobar el pago</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="pill-row">
+                  <div class="pill">No facturamos</div>
+                  <div class="pill">Recibo digital no fiscal</div>
+                  <div class="pill">Cuenta Mercado Pago: 722969010773010312</div>
+                </div>
+                <a id="payMercadoPago" class="cta-button" href="#" target="_blank" rel="noopener noreferrer">Pagar con Mercado Pago</a>
+                <p id="premiumNotice" class="premium-inline-note">La activacion premium dura 30 dias y solo se confirma con pago aprobado.</p>
+                <div class="support-copy">
+                  <strong>Personalizacion disponible solo para recibos con nombre de persona.</strong>
+                  <span>Este servicio adicional cubre personalizacion de identidad basica del recibo y no se mezcla con facturacion.</span>
+                  <a id="supportMail" href="mailto:chris@yourchisapp.com">chris@yourchisapp.com</a>
+                </div>
+              </div>
+              <div class="subscription-side">
+                <div class="assistant-chip">
+                  <img src="assets/chris/chris-avatar.png" alt="">
+                  <div>
+                    <strong>CHRIS</strong>
+                    <span>Presente en la experiencia premium sin saturar la pantalla.</span>
+                  </div>
+                </div>
+                <div class="subscription-summary">
+                  <div class="summary-row">
+                    <span>Cliente</span>
+                    <strong id="subscriptionName">Pendiente</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Concepto</span>
+                    <strong id="subscriptionConcept">Pendiente</strong>
+                  </div>
+                  <div class="summary-row">
+                    <span>Monto</span>
+                    <strong id="subscriptionAmount">Pendiente</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-footer">
+            <div class="slider-track" data-slider data-slider-action="next">
+              <div class="slider-fill" data-slider-fill></div>
+              <div class="slider-label">Ver preview</div>
+              <div class="slider-thumb" data-slider-thumb>
+                <img src="assets/icons/slider-chris.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-preview" class="screen" aria-hidden="true">
+        <div class="screen-background">
+          <img data-background-image alt="">
+        </div>
+        <div class="screen-frame">
+          <header class="screen-header">
+            <div class="header-copy">
+              <p class="screen-kicker">Paso 5 de 6</p>
+              <h1 class="screen-title">Preview del recibo</h1>
+              <p class="screen-copy">Esta version usa una plantilla visual rosa y sirve solo para revisar la composicion antes de generar el comprobante limpio.</p>
+            </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body preview-layout">
+            <div class="preview-note">Preview visual · no es el output real</div>
+            <div class="receipt-preview-card">
+              <div class="receipt-preview-header">
+                <div class="receipt-brand">
+                  <strong id="previewReceiptBrand">Your CHRIS App</strong>
+                  <span>Plantilla visual del recibo</span>
+                </div>
+                <div class="receipt-meta-tag" id="previewReceiptFolio">Se genera al emitir</div>
+              </div>
+              <div class="receipt-grid two-columns">
+                <div class="receipt-field">
+                  <span>Cliente</span>
+                  <strong id="previewReceiptName">Cliente</strong>
+                </div>
+                <div class="receipt-field">
+                  <span>Fecha</span>
+                  <strong id="previewReceiptDate">-</strong>
+                </div>
+              </div>
+              <div class="receipt-field">
+                <span>Concepto</span>
+                <strong id="previewReceiptConcept">Concepto</strong>
+              </div>
+              <div class="receipt-preview-amount">
+                <span>Monto</span>
+                <strong id="previewReceiptAmount">$0</strong>
+              </div>
+            </div>
+          </div>
+          <div class="screen-footer">
+            <div class="slider-track" data-slider data-slider-action="next">
+              <div class="slider-fill" data-slider-fill></div>
+              <div class="slider-label">Emitir recibo</div>
+              <div class="slider-thumb" data-slider-thumb>
+                <img src="assets/icons/slider-chris.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-qr" class="screen" aria-hidden="true">
+        <div class="screen-background">
+          <img data-background-image alt="">
+        </div>
+        <div class="screen-frame">
+          <header class="screen-header">
+            <div class="header-copy">
+              <p class="screen-kicker">Paso 6 de 6</p>
+              <h1 class="screen-title">Recibo listo para compartir</h1>
+              <p class="screen-copy">Aqui se separa por completo el preview del output real: el comprobante ya sale limpio, blanco y profesional.</p>
+            </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body">
+            <div class="qr-layout">
+              <div class="receipt-output-card">
+                <div class="receipt-output-header">
+                  <div class="receipt-brand">
+                    <strong>Your CHRIS App</strong>
+                    <span id="outputReceiptDisclaimer">Recibo digital no fiscal</span>
+                  </div>
+                  <div class="receipt-meta-tag" id="outputReceiptFolio">-</div>
+                </div>
+                <div class="receipt-output-body">
+                  <div class="receipt-grid two-columns">
+                    <div class="receipt-field">
+                      <span>Cliente</span>
+                      <strong id="outputReceiptName">-</strong>
+                    </div>
+                    <div class="receipt-field">
+                      <span>Fecha</span>
+                      <strong id="outputReceiptDate">-</strong>
+                    </div>
+                  </div>
+                  <div class="receipt-field">
+                    <span>Concepto</span>
+                    <strong id="outputReceiptConcept">-</strong>
+                  </div>
+                  <div class="receipt-output-emphasis">
+                    <span>Monto recibido</span>
+                    <strong id="outputReceiptAmount">-</strong>
+                  </div>
+                  <div class="receipt-field">
+                    <span>Estado premium</span>
+                    <strong id="outputReceiptPremium">-</strong>
+                  </div>
+                </div>
+              </div>
+              <div class="qr-card">
+                <div class="qr-box" id="qrEmitir"></div>
+                <div class="qr-copy">
+                  <strong>QR de referencia</strong>
+                  <span id="qrMeta">Este recibo quedara registrado localmente al generarse.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-footer">
+            <div class="slider-track" data-slider data-slider-action="next">
+              <div class="slider-fill" data-slider-fill></div>
+              <div class="slider-label">Continuar</div>
+              <div class="slider-thumb" data-slider-thumb>
+                <img src="assets/icons/slider-chris.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-confirmacion" class="screen" aria-hidden="true">
+        <div class="screen-background">
+          <img data-background-image alt="">
+        </div>
+        <div class="screen-frame">
+          <header class="screen-header">
+            <div class="header-copy">
+              <p class="screen-kicker">Listo</p>
+              <h1 class="screen-title">Recibo generado</h1>
+              <p class="screen-copy">El flujo conserva QR, navegacion y almacenamiento local, pero ahora con una base mas limpia para crecer.</p>
+            </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body confirmation-layout">
+            <div class="confirmation-card">
+              <div class="confirmation-highlight">
+                <strong id="confirmSummary">Todavia no hay un recibo generado.</strong>
+                <span id="confirmMeta">Completa el flujo para crear el comprobante.</span>
+                <span id="confirmPremium">Estado premium sin registro</span>
+              </div>
+              <button id="btnWhatsapp" class="secondary-button" type="button">Enviar por WhatsApp</button>
+              <div class="pill-row">
+                <div class="pill">Historial local activo</div>
+                <div class="pill">Codigo modular y escalable</div>
+              </div>
+            </div>
+          </div>
+          <div class="screen-footer">
+            <div class="slider-track" data-slider data-slider-action="restart">
+              <div class="slider-fill" data-slider-fill></div>
+              <div class="slider-label">Crear otro recibo</div>
+              <div class="slider-thumb" data-slider-thumb>
+                <img src="assets/icons/slider-chris.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

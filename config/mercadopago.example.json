@@ -1,0 +1,16 @@
+{
+  "mercadoPago": {
+    "mode": "mock",
+    "publicBaseUrl": "http://localhost:8787",
+    "publicKey": "TEST-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "accessToken": "TEST-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxxx-xxxxxxxxx",
+    "notificationUrl": "https://tu-url-publica.example.com/api/payments/webhook",
+    "statementDescriptor": "YOURCHRISAPP"
+  },
+  "premiumPlan": {
+    "name": "Your CHRIS App Premium Mensual",
+    "durationDays": 30,
+    "monthlyPrice": 149,
+    "currency": "MXN"
+  }
+}
