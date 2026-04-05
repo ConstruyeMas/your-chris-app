@@ -148,9 +148,9 @@
     const floatingChrisProfiles = Object.freeze({
       "screen-nombre": {
         image: "assets/chris/chris-nombre.png",
-        right: "clamp(18px, 3vw, 40px)",
-        bottom: "clamp(26px, 4vh, 44px)",
-        width: "clamp(128px, 17vw, 228px)",
+        right: "clamp(12px, 2.4vw, 24px)",
+        bottom: "clamp(72px, 9vh, 116px)",
+        width: "clamp(104px, 14vw, 176px)",
         translateX: "0px",
         translateY: "0px",
         rotate: "-1deg"
@@ -247,10 +247,12 @@
       const profile = floatingChrisProfiles[screenId];
 
       if (!profile) {
+        delete root.dataset.screen;
         root.classList.remove("is-visible");
         return;
       }
 
+      root.dataset.screen = screenId;
       swapFloatingChrisImage(profile.image);
       image.alt = "";
       root.style.setProperty("--chris-floating-left", profile.left || "auto");

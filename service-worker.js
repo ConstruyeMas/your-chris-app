@@ -1,4 +1,4 @@
-const CACHE_NAME = "your-chris-app-shell-v4";
+const CACHE_NAME = "your-chris-app-shell-v5";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -50,6 +50,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
   );
+  self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
@@ -62,6 +63,7 @@ self.addEventListener("activate", (event) => {
       )
     )
   );
+  self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
