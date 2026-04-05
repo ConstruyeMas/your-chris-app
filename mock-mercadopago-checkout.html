@@ -91,7 +91,7 @@
       : "Intento no encontrado";
 
     async function complete(status) {
-      await fetch("/api/payments/mock-complete", {
+      await fetch("./api/payments/mock-complete", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -103,7 +103,7 @@
         })
       });
 
-      window.location.href = `/App_Recibo_Themes.html?intent_id=${encodeURIComponent(intentId)}&payment_status=${encodeURIComponent(status)}`;
+      window.location.href = `./App_Recibo_Themes.html?intent_id=${encodeURIComponent(intentId)}&payment_status=${encodeURIComponent(status)}`;
     }
 
     document.querySelectorAll("[data-status]").forEach((button) => {

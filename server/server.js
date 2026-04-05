@@ -150,7 +150,7 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
-    const pathname = requestUrl.pathname === "/" ? "/App_Recibo_Themes.html" : requestUrl.pathname;
+    const pathname = requestUrl.pathname === "/" ? "/index.html" : requestUrl.pathname;
     const filePath = safeFilePath(pathname.replace(/^\//, ""));
 
     if (!filePath) {

@@ -1,23 +1,24 @@
 const fs = require("fs");
 const path = require("path");
+const sharedConfig = require(path.join(process.cwd(), "config", "shared-config.js"));
 
 const DEFAULT_CONFIG = Object.freeze({
-  appName: "Your CHRIS App",
-  supportEmail: "chris@yourchisapp.com",
+  appName: sharedConfig.appName,
+  supportEmail: sharedConfig.supportEmail,
   mercadoPago: {
     mode: "mock",
-    accountReference: "722969010773010312",
+    accountReference: sharedConfig.mercadoPago.accountReference,
     publicBaseUrl: "http://localhost:8787",
     publicKey: "",
     accessToken: "",
     notificationUrl: "",
-    statementDescriptor: "YOURCHRISAPP"
+    statementDescriptor: sharedConfig.mercadoPago.statementDescriptor
   },
   premiumPlan: {
-    name: "Your CHRIS App Premium Mensual",
-    durationDays: 30,
-    monthlyPrice: 149,
-    currency: "MXN"
+    name: sharedConfig.premiumPlan.name,
+    durationDays: sharedConfig.premiumPlan.durationDays,
+    monthlyPrice: sharedConfig.premiumPlan.monthlyPrice,
+    currency: sharedConfig.premiumPlan.currency
   }
 });
 
@@ -47,7 +48,11 @@ function loadLocalConfig() {
     return {};
   }
 
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch (error) {
+    throw new Error(`No se pudo leer config/mercadopago.local.json: ${error.message}`);
+  }
 }
 
 function loadConfig() {

@@ -1,8 +1,10 @@
 const CACHE_NAME = "your-chris-app-shell-v1";
 const APP_SHELL = [
   "./",
+  "./index.html",
   "./App_Recibo_Themes.html",
   "./manifest.webmanifest",
+  "./config/shared-config.js",
   "./core/app.css",
   "./core/app.js",
   "./core/config.js",
@@ -22,6 +24,7 @@ const APP_SHELL = [
   "./assets/icons/app-icon-180.png",
   "./assets/icons/app-icon-192.png",
   "./assets/icons/app-icon-512.png",
+  "./assets/icons/app-icon-1024.png",
   "./assets/icons/slider-chris.png",
   "./assets/themes/nombre.png",
   "./assets/themes/concepto.png",

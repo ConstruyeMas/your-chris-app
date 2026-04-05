@@ -1,8 +1,10 @@
 {
   "name": "Your CHRIS App",
   "short_name": "Your CHRIS App",
+  "id": "./App_Recibo_Themes.html",
   "lang": "es-MX",
   "start_url": "./App_Recibo_Themes.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#f8f3ed",

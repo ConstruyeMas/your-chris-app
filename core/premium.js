@@ -194,7 +194,7 @@
   }
 
   ChrisApp.premium = {
-    createManager,
+    createManager: createPremiumManager,
     normalizePremiumState,
     statusMeta
   };

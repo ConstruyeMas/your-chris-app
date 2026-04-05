@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Your CHRIS App">
+  <meta name="application-name" content="Your CHRIS App">
+  <meta name="theme-color" content="#ef7f25">
+  <title>Your CHRIS App</title>
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/app-icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/app-icon-180.png">
+  <link rel="apple-touch-icon-precomposed" sizes="180x180" href="assets/icons/app-icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta http-equiv="refresh" content="0; url=./App_Recibo_Themes.html">
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at top, rgba(255, 195, 133, 0.32), transparent 34%),
+        linear-gradient(180deg, #faf5ef 0%, #f3eadf 100%);
+      color: #241711;
+    }
+
+    .boot {
+      width: min(92vw, 420px);
+      padding: 24px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 22px 50px rgba(56, 35, 19, 0.12);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.55;
+      color: #6f6358;
+    }
+  </style>
+</head>
+<body>
+  <main class="boot">
+    <h1>Your CHRIS App</h1>
+    <p>Abriendo la aplicacion...</p>
+  </main>
+  <script>
+    window.location.replace("./App_Recibo_Themes.html");
+  </script>
+</body>
+</html>
