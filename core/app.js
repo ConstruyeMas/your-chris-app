@@ -80,12 +80,18 @@
       historyList: document.getElementById("historyList"),
       historyCount: document.getElementById("historyCount"),
       historyOpenButtons: document.querySelectorAll("[data-history-open]"),
+      chrisFloating: {
+        root: document.getElementById("chris-floating")
+      },
       inputs: {
         nombre: document.getElementById("inputNombre"),
         concepto: document.getElementById("inputConcepto"),
         monto: document.getElementById("inputMonto")
       },
       suscripcion: {
+        root: document.getElementById("premium-modal"),
+        closeButton: document.getElementById("premiumClose"),
+        closeTargets: document.querySelectorAll("[data-premium-close]"),
         payButton: document.getElementById("payMercadoPago"),
         supportMail: document.getElementById("supportMail"),
         summaryName: document.getElementById("subscriptionName"),
@@ -111,7 +117,7 @@
         date: document.getElementById("previewReceiptDate"),
         folio: document.getElementById("previewReceiptFolio")
       },
-      qr: {
+      receipt: {
         qr: document.getElementById("qrEmitir"),
         folio: document.getElementById("outputReceiptFolio"),
         date: document.getElementById("outputReceiptDate"),
@@ -134,6 +140,74 @@
       splash: elements.splash
     });
 
+    const floatingChrisProfiles = Object.freeze({
+      "screen-nombre": {
+        right: "clamp(18px, 3vw, 40px)",
+        bottom: "clamp(26px, 4vh, 44px)",
+        width: "clamp(128px, 17vw, 228px)",
+        translateX: "0px",
+        translateY: "0px",
+        rotate: "-1deg"
+      },
+      "screen-concepto": {
+        right: "clamp(16px, 2.8vw, 36px)",
+        bottom: "clamp(34px, 5vh, 54px)",
+        width: "clamp(130px, 17vw, 230px)",
+        translateX: "0px",
+        translateY: "0px",
+        rotate: "1deg"
+      },
+      "screen-monto": {
+        right: "clamp(18px, 3vw, 38px)",
+        bottom: "clamp(30px, 4vh, 48px)",
+        width: "clamp(132px, 18vw, 236px)",
+        translateX: "0px",
+        translateY: "0px",
+        rotate: "-2deg"
+      },
+      "screen-preview": {
+        left: "clamp(18px, 3vw, 40px)",
+        bottom: "clamp(22px, 3vh, 34px)",
+        width: "clamp(118px, 16vw, 210px)",
+        translateX: "0px",
+        translateY: "0px",
+        rotate: "2deg"
+      },
+      "screen-confirmacion": {
+        left: "clamp(18px, 3vw, 40px)",
+        bottom: "clamp(18px, 3vh, 30px)",
+        width: "clamp(114px, 15vw, 198px)",
+        translateX: "0px",
+        translateY: "0px",
+        rotate: "-1deg"
+      }
+    });
+
+    function renderFloatingChris(screenId) {
+      const root = elements.chrisFloating.root;
+
+      if (!root) {
+        return;
+      }
+
+      const profile = floatingChrisProfiles[screenId];
+
+      if (!profile) {
+        root.classList.remove("is-visible");
+        return;
+      }
+
+      root.style.setProperty("--chris-floating-left", profile.left || "auto");
+      root.style.setProperty("--chris-floating-right", profile.right || "auto");
+      root.style.setProperty("--chris-floating-top", profile.top || "auto");
+      root.style.setProperty("--chris-floating-bottom", profile.bottom || "auto");
+      root.style.setProperty("--chris-floating-width", profile.width || "clamp(120px, 16vw, 220px)");
+      root.style.setProperty("--chris-floating-translate-x", profile.translateX || "0px");
+      root.style.setProperty("--chris-floating-translate-y", profile.translateY || "0px");
+      root.style.setProperty("--chris-floating-rotate", profile.rotate || "0deg");
+      root.classList.add("is-visible");
+    }
+
     function renderHistory() {
       const history = ChrisApp.storage.readHistory();
       elements.historyList.innerHTML = "";
@@ -150,12 +224,6 @@
       history.forEach((entry) => {
         elements.historyList.appendChild(createHistoryItem(entry));
       });
-    }
-
-    function openHistory() {
-      renderHistory();
-      document.body.classList.add("history-open");
-      elements.historyPanel.setAttribute("aria-hidden", "false");
     }
 
     function closeHistory() {
@@ -186,15 +254,22 @@
       elements: elements.preview
     });
 
-    const qr = ChrisApp.screens.qr.init({
+    const receiptPanel = ChrisApp.screens.qr.init({
       state,
-      elements: elements.qr
+      elements: elements.receipt
     });
 
     const confirmacion = ChrisApp.screens.confirmacion.init({
       state,
       elements: elements.confirmacion
     });
+
+    function openHistory() {
+      suscripcion.close();
+      renderHistory();
+      document.body.classList.add("history-open");
+      elements.historyPanel.setAttribute("aria-hidden", "false");
+    }
 
     elements.historyOpenButtons.forEach((button) => {
       button.addEventListener("click", openHistory);
@@ -204,9 +279,16 @@
     elements.historyBackdrop.addEventListener("click", closeHistory);
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        closeHistory();
+      if (event.key !== "Escape") {
+        return;
       }
+
+      if (document.body.classList.contains("premium-open")) {
+        suscripcion.close();
+        return;
+      }
+
+      closeHistory();
     });
 
     const navigator = ChrisApp.navigation.createNavigator({
@@ -214,17 +296,15 @@
         "screen-nombre",
         "screen-concepto",
         "screen-monto",
-        "screen-suscripcion",
         "screen-preview",
-        "screen-qr",
         "screen-confirmacion"
       ],
-      beforeChange({ currentId }) {
+      beforeChange({ currentId, nextId }) {
         if (!formulario.validateForScreen(currentId)) {
           return false;
         }
 
-        if (currentId === "screen-suscripcion") {
+        if (currentId === "screen-monto" && nextId === "screen-preview") {
           return suscripcion.canAdvance();
         }
 
@@ -232,21 +312,15 @@
       },
       afterChange({ nextId }) {
         closeHistory();
-
-        if (nextId === "screen-suscripcion") {
-          suscripcion.render();
-        }
+        suscripcion.close();
+        renderFloatingChris(nextId);
 
         if (nextId === "screen-preview") {
           preview.render();
         }
 
-        if (nextId === "screen-qr") {
-          qr.render();
-          renderHistory();
-        }
-
         if (nextId === "screen-confirmacion") {
+          receiptPanel.render();
           confirmacion.render();
           renderHistory();
         }
@@ -263,6 +337,7 @@
 
     function restartFlow() {
       closeHistory();
+      suscripcion.close();
       formulario.reset();
       navigator.reset();
       window.setTimeout(resetSliders, 80);
@@ -306,7 +381,7 @@
     let swipeStart = null;
 
     document.addEventListener("touchstart", (event) => {
-      if (document.body.classList.contains("history-open")) {
+      if (document.body.classList.contains("history-open") || document.body.classList.contains("premium-open")) {
         return;
       }
 
@@ -322,7 +397,7 @@
     }, { passive: true });
 
     document.addEventListener("touchend", (event) => {
-      if (!swipeStart || document.body.classList.contains("history-open")) {
+      if (!swipeStart || document.body.classList.contains("history-open") || document.body.classList.contains("premium-open")) {
         swipeStart = null;
         return;
       }
@@ -341,6 +416,7 @@
 
     ChrisApp.themes.apply(document);
     navigator.setInitial();
+    renderFloatingChris(navigator.getCurrentId());
     renderHistory();
     registerServiceWorker();
     await premiumManager.bootstrap();

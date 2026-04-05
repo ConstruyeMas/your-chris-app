@@ -16,20 +16,7 @@
     const state = context.state;
     const elements = context.elements;
     const premiumManager = context.premiumManager;
-
-    elements.payButton.addEventListener("click", async (event) => {
-      event.preventDefault();
-      elements.notice.textContent = "Preparando intento de pago...";
-      elements.payButton.classList.add("is-loading");
-
-      try {
-        await premiumManager.startCheckout(state.form);
-      } catch (error) {
-        console.error("No se pudo iniciar el pago:", error);
-        elements.notice.textContent = "No se pudo iniciar el pago. Usa npm run dev para habilitar la validacion local.";
-        elements.payButton.classList.remove("is-loading");
-      }
-    });
+    let closeTimer = null;
 
     function showAdvanceRequired() {
       elements.notice.textContent = "Necesitas una premium activa para continuar al preview y emitir recibos.";
@@ -59,6 +46,7 @@
       elements.activationDate.textContent = formatDate(premiumState.activationDate);
       elements.expirationDate.textContent = formatDate(premiumState.expirationDate);
       elements.paymentReference.textContent = premiumState.paymentReference || "Se asigna al aprobar el pago";
+
       if (premiumState.status === "active") {
         elements.notice.textContent = "Tu premium esta activa. Ya puedes continuar al preview y emitir recibos.";
       } else if (premiumState.status === "pending") {
@@ -68,13 +56,61 @@
       } else {
         elements.notice.textContent = "La activacion premium dura 30 dias y solo se confirma con pago aprobado.";
       }
+
       elements.payButton.classList.remove("is-loading");
     }
+
+    function open() {
+      render();
+      window.clearTimeout(closeTimer);
+      elements.root.hidden = false;
+      elements.root.setAttribute("aria-hidden", "false");
+      document.body.classList.add("premium-open");
+
+      window.requestAnimationFrame(() => {
+        elements.root.classList.add("is-open");
+      });
+    }
+
+    function close() {
+      if (elements.root.hidden) {
+        return;
+      }
+
+      elements.root.classList.remove("is-open");
+      elements.root.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("premium-open");
+      window.clearTimeout(closeTimer);
+      closeTimer = window.setTimeout(() => {
+        elements.root.hidden = true;
+      }, 240);
+    }
+
+    elements.payButton.addEventListener("click", async (event) => {
+      event.preventDefault();
+      render();
+      elements.notice.textContent = "Preparando intento de pago...";
+      elements.payButton.classList.add("is-loading");
+
+      try {
+        await premiumManager.startCheckout(state.form);
+      } catch (error) {
+        console.error("No se pudo iniciar el pago:", error);
+        elements.notice.textContent = "No se pudo iniciar el pago. Usa npm run dev para habilitar la validacion local.";
+        elements.payButton.classList.remove("is-loading");
+      }
+    });
+
+    elements.closeButton.addEventListener("click", close);
+    elements.closeTargets.forEach((target) => {
+      target.addEventListener("click", close);
+    });
 
     function canAdvance() {
       const isPremiumActive = premiumManager.canUsePremium();
 
       if (!isPremiumActive) {
+        open();
         showAdvanceRequired();
       }
 
@@ -83,6 +119,8 @@
 
     return {
       canAdvance,
+      close,
+      open,
       render,
       showAdvanceRequired
     };

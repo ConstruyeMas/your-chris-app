@@ -1,4 +1,4 @@
-const CACHE_NAME = "your-chris-app-shell-v1";
+const CACHE_NAME = "your-chris-app-shell-v3";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -31,7 +31,6 @@ const APP_SHELL = [
   "./assets/themes/monto.png",
   "./assets/themes/suscripcion.png",
   "./assets/themes/preview.png",
-  "./assets/themes/qr.png",
   "./assets/themes/confirmacion.png",
   "./assets/templates/receipt-preview.svg",
   "./assets/templates/receipt-output.svg"

@@ -26,8 +26,8 @@
         return;
       }
 
-      elements.summary.textContent = `${state.currentReceipt.nombre} · ${state.currentReceipt.monto}`;
-      elements.meta.textContent = `${state.currentReceipt.folio} · ${state.currentReceipt.fecha}`;
+      elements.summary.textContent = `${state.currentReceipt.nombre} - ${state.currentReceipt.monto}`;
+      elements.meta.textContent = `${state.currentReceipt.folio} - ${state.currentReceipt.fecha}`;
       elements.premium.textContent = `Estado premium al emitir: ${state.currentReceipt.premiumStatusLabel}`;
     }
 
