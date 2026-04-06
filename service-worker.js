@@ -1,15 +1,15 @@
-const CACHE_NAME = "your-chris-app-shell-v8";
+const CACHE_NAME = "your-chris-app-shell-v9";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./App_Recibo_Themes.html",
-  "./App_Recibo_Themes.html?v=26a5d77",
+  "./App_Recibo_Themes.html?v=20260405-screen-nombre",
   "./manifest.webmanifest",
   "./config/shared-config.js",
   "./core/app.css",
-  "./core/app.css?v=26a5d77",
+  "./core/app.css?v=20260405-screen-nombre",
   "./core/app.js",
-  "./core/app.js?v=26a5d77",
+  "./core/app.js?v=20260405-screen-nombre",
   "./core/config.js",
   "./core/storage.js",
   "./core/receipts.js",

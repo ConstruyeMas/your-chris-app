@@ -55,7 +55,7 @@
       return;
     }
 
-    window.navigator.serviceWorker.register("./service-worker.js").catch((error) => {
+    window.navigator.serviceWorker.register("./service-worker.js?v=20260405-screen-nombre").catch((error) => {
       console.warn("No se pudo registrar el service worker:", error);
     });
   }
@@ -148,9 +148,9 @@
     const floatingChrisProfiles = Object.freeze({
       "screen-nombre": {
         image: "assets/chris/chris-nombre.png",
-        right: "clamp(14px, 2.4vw, 28px)",
-        bottom: "clamp(108px, 14vh, 164px)",
-        width: "clamp(94px, 12.4vw, 154px)",
+        right: "clamp(10px, 2vw, 22px)",
+        bottom: "clamp(8px, 1.4vh, 14px)",
+        width: "clamp(92px, 10.2vw, 136px)",
         translateX: "0px",
         translateY: "0px",
         rotate: "-1deg"

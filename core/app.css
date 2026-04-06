@@ -200,8 +200,10 @@ img {
 }
 
 #screen-nombre .screen-body {
-  align-items: start;
-  padding-top: clamp(164px, 22vh, 274px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(34px, 6vh, 62px) 0 clamp(30px, 6vh, 60px);
 }
 
 .glass-card,
@@ -224,16 +226,17 @@ img {
 }
 
 #screen-nombre .glass-card {
-  width: min(100%, 560px);
+  width: min(100%, 500px);
   padding: clamp(16px, 2.3vw, 22px) clamp(18px, 2.8vw, 24px);
   gap: 12px;
   margin-top: 0;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.78);
+  align-self: center;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.34));
+  border: 1px solid rgba(255, 255, 255, 0.64);
   box-shadow:
-    0 18px 38px rgba(63, 38, 18, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.62);
-  backdrop-filter: blur(16px);
+    0 16px 34px rgba(63, 38, 18, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.54);
+  backdrop-filter: blur(18px);
 }
 
 .form-note {
@@ -280,7 +283,7 @@ img {
 #screen-nombre .text-input {
   min-height: 62px;
   padding: 16px 18px;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 #screen-nombre .text-input::placeholder {
@@ -310,8 +313,11 @@ img {
 }
 
 #screen-nombre .screen-footer {
-  padding-right: clamp(146px, 19vw, 226px);
-  justify-items: end;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-right: clamp(236px, 29vw, 356px);
+  padding-bottom: clamp(10px, 2vh, 24px);
 }
 
 .slider-track {
@@ -324,8 +330,8 @@ img {
 }
 
 #screen-nombre .slider-track {
-  width: min(70%, 360px);
-  margin-inline: auto 0;
+  width: min(58%, 288px, calc(100% - 320px));
+  margin-inline: 0;
 }
 
 .slider-track::before,
@@ -1041,7 +1047,7 @@ img {
   top: var(--chris-floating-top, auto);
   bottom: var(--chris-floating-bottom, auto);
   width: var(--chris-floating-width, clamp(120px, 16vw, 220px));
-  z-index: 4;
+  z-index: 12;
   pointer-events: none;
   opacity: 0;
   transform:
@@ -1063,6 +1069,7 @@ img {
 
 .chris-floating-shell {
   overflow: visible;
+  background: transparent;
 }
 
 .chris-floating img {
@@ -1070,8 +1077,13 @@ img {
   width: 100%;
   height: auto;
   object-fit: contain;
+  background: transparent;
   filter: drop-shadow(0 22px 34px rgba(35, 23, 14, 0.22));
   transition: opacity 220ms ease;
+}
+
+.chris-floating[data-screen="screen-nombre"] {
+  isolation: isolate;
 }
 
 .chris-floating[data-screen="screen-nombre"] img {
@@ -1080,11 +1092,20 @@ img {
   filter: none;
 }
 
+.chris-floating[data-screen="screen-nombre"],
 .chris-floating[data-screen="screen-nombre"] .chris-floating-shell {
   background: transparent;
+  background-color: transparent !important;
+  background-image: none !important;
   border: 0;
   box-shadow: none;
   backdrop-filter: none;
+}
+
+.chris-floating[data-screen="screen-nombre"] img {
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
 }
 
 .chris-floating.is-swapping img {
@@ -1324,6 +1345,10 @@ body.history-open .history-backdrop {
   .chris-floating {
     width: clamp(112px, 28vw, 172px);
   }
+
+  .chris-floating[data-screen="screen-nombre"] {
+    width: clamp(96px, 18vw, 132px);
+  }
 }
 
 @media (max-width: 640px) {
@@ -1379,16 +1404,17 @@ body.history-open .history-backdrop {
   }
 
   #screen-nombre .screen-footer {
-    padding-right: 0;
+    padding-right: clamp(132px, 34vw, 156px);
+    padding-bottom: 10px;
   }
 
   #screen-nombre .screen-body {
-    padding-top: clamp(110px, 17vh, 180px);
+    padding: clamp(26px, 6vh, 50px) 0 clamp(18px, 4vh, 32px);
   }
 
   #screen-nombre .slider-track {
-    width: min(70%, 280px);
-    margin-inline: auto 0;
+    width: min(61vw, 212px, calc(100% - 144px));
+    margin-inline: 0;
   }
 
   .slider-label {
@@ -1404,6 +1430,11 @@ body.history-open .history-backdrop {
   .chris-floating {
     width: 128px;
     bottom: 14px !important;
+  }
+
+  .chris-floating[data-screen="screen-nombre"] {
+    width: clamp(88px, 22vw, 108px);
+    bottom: 6px !important;
   }
 }
 
