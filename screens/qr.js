@@ -31,9 +31,10 @@
     function ensureReceipt() {
       if (!state.currentReceipt) {
         state.currentReceipt = receipts.createReceipt(state.form, state.premium);
-        storage.saveHistoryItem(state.currentReceipt);
       }
 
+      state.currentReceipt = receipts.syncReceiptPremium(state.currentReceipt, state.premium);
+      storage.saveHistoryItem(state.currentReceipt);
       return state.currentReceipt;
     }
 

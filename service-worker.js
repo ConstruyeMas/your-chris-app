@@ -1,15 +1,15 @@
-const CACHE_NAME = "your-chris-app-shell-v9";
+const CACHE_NAME = "your-chris-app-shell-v10";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./App_Recibo_Themes.html",
-  "./App_Recibo_Themes.html?v=20260405-screen-nombre",
+  "./App_Recibo_Themes.html?v=20260405-flow-premium",
   "./manifest.webmanifest",
   "./config/shared-config.js",
   "./core/app.css",
-  "./core/app.css?v=20260405-screen-nombre",
+  "./core/app.css?v=20260405-flow-premium",
   "./core/app.js",
-  "./core/app.js?v=20260405-screen-nombre",
+  "./core/app.js?v=20260405-flow-premium",
   "./core/config.js",
   "./core/storage.js",
   "./core/receipts.js",
@@ -44,6 +44,7 @@ const APP_SHELL = [
   "./assets/themes/monto.png",
   "./assets/themes/suscripcion.png",
   "./assets/themes/preview.png",
+  "./assets/themes/qr.png",
   "./assets/themes/confirmacion.png",
   "./assets/templates/receipt-preview.svg",
   "./assets/templates/receipt-output.svg"

@@ -36,6 +36,13 @@
       maxWidth: "660px",
       shiftX: "0px",
       shiftY: "0px"
+    },
+    "screen-envio": {
+      src: "assets/themes/qr.png",
+      opacity: "0.92",
+      maxWidth: "660px",
+      shiftX: "0px",
+      shiftY: "0px"
     }
   });
 

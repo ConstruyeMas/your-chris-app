@@ -55,7 +55,7 @@
       return;
     }
 
-    window.navigator.serviceWorker.register("./service-worker.js?v=20260405-screen-nombre").catch((error) => {
+    window.navigator.serviceWorker.register("./service-worker.js?v=20260405-flow-premium").catch((error) => {
       console.warn("No se pudo registrar el service worker:", error);
     });
   }
@@ -80,6 +80,7 @@
       historyList: document.getElementById("historyList"),
       historyCount: document.getElementById("historyCount"),
       historyOpenButtons: document.querySelectorAll("[data-history-open]"),
+      backButton: document.getElementById("navBack"),
       chrisFloating: {
         root: document.getElementById("chris-floating"),
         image: document.querySelector("#chris-floating img")
@@ -103,10 +104,7 @@
         planCycle: document.getElementById("premiumPlanCycle"),
         statusBadge: document.getElementById("premiumStatusBadge"),
         statusDetail: document.getElementById("premiumStatusDetail"),
-        paymentMode: document.getElementById("premiumPaymentMode"),
-        accountReference: document.getElementById("premiumAccountReference"),
-        activationDate: document.getElementById("premiumActivationDate"),
-        expirationDate: document.getElementById("premiumExpirationDate"),
+        paymentReferenceRow: document.getElementById("premiumPaymentReferenceRow"),
         paymentReference: document.getElementById("premiumPaymentReference"),
         notice: document.getElementById("premiumNotice")
       },
@@ -133,7 +131,14 @@
         whatsAppButton: document.getElementById("btnWhatsapp"),
         summary: document.getElementById("confirmSummary"),
         meta: document.getElementById("confirmMeta"),
-        premium: document.getElementById("confirmPremium")
+        premium: document.getElementById("confirmPremium"),
+        shareSummary: document.getElementById("shareSummary"),
+        shareMeta: document.getElementById("shareMeta"),
+        sharePremium: document.getElementById("sharePremium"),
+        shareName: document.getElementById("shareReceiptName"),
+        shareConcept: document.getElementById("shareReceiptConcept"),
+        shareAmount: document.getElementById("shareReceiptAmount"),
+        shareFolio: document.getElementById("shareReceiptFolio")
       }
     };
 
@@ -145,59 +150,48 @@
       elements.chrisFloating.image.dataset.currentSrc = elements.chrisFloating.image.getAttribute("src") || "";
     }
 
+    const sharedChrisPlacement = Object.freeze({
+      right: "clamp(10px, 2vw, 22px)",
+      bottom: "clamp(8px, 1.4vh, 14px)",
+      width: "clamp(92px, 10.2vw, 136px)",
+      translateX: "0px",
+      translateY: "0px"
+    });
+
     const floatingChrisProfiles = Object.freeze({
       "screen-nombre": {
+        ...sharedChrisPlacement,
         image: "assets/chris/chris-nombre.png",
-        right: "clamp(10px, 2vw, 22px)",
-        bottom: "clamp(8px, 1.4vh, 14px)",
-        width: "clamp(92px, 10.2vw, 136px)",
-        translateX: "0px",
-        translateY: "0px",
         rotate: "-1deg"
       },
       "screen-concepto": {
+        ...sharedChrisPlacement,
         image: "assets/chris/chris-concepto.png",
-        right: "clamp(16px, 2.8vw, 36px)",
-        bottom: "clamp(34px, 5vh, 54px)",
-        width: "clamp(130px, 17vw, 230px)",
-        translateX: "0px",
-        translateY: "0px",
-        rotate: "1deg"
+        rotate: "-1deg"
       },
       "screen-monto": {
+        ...sharedChrisPlacement,
         image: "assets/chris/chris-monto.png",
-        right: "clamp(18px, 3vw, 38px)",
-        bottom: "clamp(30px, 4vh, 48px)",
-        width: "clamp(138px, 19vw, 244px)",
-        translateX: "0px",
-        translateY: "0px",
         rotate: "-2deg"
       },
       "screen-premium": {
+        ...sharedChrisPlacement,
         image: "assets/chris/chris-premium.png",
-        left: "clamp(12px, 3vw, 34px)",
-        bottom: "clamp(12px, 2vh, 26px)",
-        width: "clamp(170px, 21vw, 280px)",
-        translateX: "0px",
-        translateY: "0px",
         rotate: "0deg"
       },
       "screen-preview": {
+        ...sharedChrisPlacement,
         image: "assets/chris/chris-emitir.png",
-        left: "clamp(18px, 3vw, 40px)",
-        bottom: "clamp(22px, 3vh, 34px)",
-        width: "clamp(118px, 16vw, 210px)",
-        translateX: "0px",
-        translateY: "0px",
         rotate: "2deg"
       },
       "screen-confirmacion": {
+        ...sharedChrisPlacement,
         image: "assets/chris/chris-confirmacion.png",
-        left: "clamp(18px, 3vw, 40px)",
-        bottom: "clamp(18px, 3vh, 30px)",
-        width: "clamp(114px, 15vw, 198px)",
-        translateX: "0px",
-        translateY: "0px",
+        rotate: "-1deg"
+      },
+      "screen-envio": {
+        ...sharedChrisPlacement,
+        image: "assets/chris/chris-confirmacion.png",
         rotate: "-1deg"
       }
     });
@@ -289,10 +283,26 @@
       elements.historyPanel.setAttribute("aria-hidden", "true");
     }
 
+    function renderBackButton(screenId) {
+      if (!elements.backButton) {
+        return;
+      }
+
+      elements.backButton.hidden = screenId === "screen-nombre";
+    }
+
+    let suscripcion = null;
+    let confirmacion = null;
     const premiumManager = ChrisApp.premium.createManager({
       state,
       onChange() {
-        suscripcion.render();
+        if (suscripcion) {
+          suscripcion.render();
+        }
+
+        if (confirmacion) {
+          confirmacion.render();
+        }
       }
     });
     const defaultChrisHost = elements.chrisFloating.root ? elements.chrisFloating.root.parentElement : null;
@@ -303,7 +313,7 @@
       inputs: elements.inputs
     });
 
-    const suscripcion = ChrisApp.screens.suscripcion.init({
+    suscripcion = ChrisApp.screens.suscripcion.init({
       state,
       elements: elements.suscripcion,
       premiumManager,
@@ -330,9 +340,14 @@
       elements: elements.receipt
     });
 
-    const confirmacion = ChrisApp.screens.confirmacion.init({
+    confirmacion = ChrisApp.screens.confirmacion.init({
       state,
-      elements: elements.confirmacion
+      elements: elements.confirmacion,
+      premiumManager,
+      requestPremium() {
+        suscripcion.open();
+        suscripcion.showSendRequired();
+      }
     });
 
     function openHistory() {
@@ -348,6 +363,18 @@
 
     elements.historyClose.addEventListener("click", closeHistory);
     elements.historyBackdrop.addEventListener("click", closeHistory);
+    elements.backButton.addEventListener("click", () => {
+      if (!navigator || navigator.isTransitioning()) {
+        return;
+      }
+
+      closeHistory();
+      suscripcion.close();
+
+      if (navigator.previous()) {
+        window.setTimeout(resetSliders, 80);
+      }
+    });
 
     document.addEventListener("keydown", (event) => {
       if (event.key !== "Escape") {
@@ -368,15 +395,12 @@
         "screen-concepto",
         "screen-monto",
         "screen-preview",
-        "screen-confirmacion"
+        "screen-confirmacion",
+        "screen-envio"
       ],
       beforeChange({ currentId, nextId }) {
         if (!formulario.validateForScreen(currentId)) {
           return false;
-        }
-
-        if (currentId === "screen-monto" && nextId === "screen-preview") {
-          return suscripcion.canAdvance();
         }
 
         return true;
@@ -385,12 +409,13 @@
         closeHistory();
         suscripcion.close();
         renderFloatingChris(nextId);
+        renderBackButton(nextId);
 
         if (nextId === "screen-preview") {
           preview.render();
         }
 
-        if (nextId === "screen-confirmacion") {
+        if (nextId === "screen-confirmacion" || nextId === "screen-envio") {
           receiptPanel.render();
           confirmacion.render();
           renderHistory();
@@ -488,6 +513,7 @@
     ChrisApp.themes.apply(document);
     navigator.setInitial();
     renderFloatingChris(navigator.getCurrentId());
+    renderBackButton(navigator.getCurrentId());
     renderHistory();
     registerServiceWorker();
     await premiumManager.bootstrap();

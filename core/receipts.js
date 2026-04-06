@@ -96,6 +96,21 @@
     };
   }
 
+  function syncReceiptPremium(receipt, premiumState) {
+    if (!receipt) {
+      return null;
+    }
+
+    const premiumStatus = premiumState && premiumState.status ? premiumState.status : "inactive";
+
+    return {
+      ...receipt,
+      premiumStatus,
+      premiumStatusLabel: formatPremiumStatusLabel(premiumStatus),
+      paymentReference: premiumState && premiumState.paymentReference ? premiumState.paymentReference : ""
+    };
+  }
+
   function createWhatsAppMessage(receipt) {
     return [
       `*${config.appName}*`,
@@ -121,6 +136,7 @@
     formatPremiumStatusLabel,
     createReceipt,
     createQrPayload,
-    createWhatsAppMessage
+    createWhatsAppMessage,
+    syncReceiptPremium
   };
 })(window);

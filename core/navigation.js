@@ -80,6 +80,15 @@
 
         return activate(currentIndex + 1);
       },
+      previous() {
+        if (currentIndex <= 0) {
+          return false;
+        }
+
+        return activate(currentIndex - 1, {
+          skipBefore: true
+        });
+      },
       goTo(screenId, extra) {
         const targetIndex = screenIds.indexOf(screenId);
         return activate(targetIndex, extra);
