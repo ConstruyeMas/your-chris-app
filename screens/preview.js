@@ -9,6 +9,17 @@
     const elements = context.elements;
 
     function render() {
+      if (
+        !elements.brand ||
+        !elements.name ||
+        !elements.concept ||
+        !elements.amount ||
+        !elements.date ||
+        !elements.folio
+      ) {
+        return;
+      }
+
       const today = receipts.formatDate(new Date());
       const tempFolio = state.currentReceipt ? state.currentReceipt.folio : "Se genera al emitir";
 

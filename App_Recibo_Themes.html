@@ -17,6 +17,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="core/app.css?v=20260405-flow-premium">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
   <script src="config/shared-config.js" defer></script>
   <script src="core/config.js" defer></script>
   <script src="core/storage.js" defer></script>
@@ -30,6 +31,7 @@
   <script src="screens/suscripcion.js" defer></script>
   <script src="screens/preview.js" defer></script>
   <script src="screens/qr.js" defer></script>
+  <script src="core/pdf.js" defer></script>
   <script src="screens/confirmacion.js" defer></script>
   <script src="core/app.js?v=20260405-flow-premium" defer></script>
 </head>
@@ -129,28 +131,27 @@
       </div>
     </div>
 
-    <button id="navBack" class="nav-back" type="button" aria-label="Regresar" hidden>Volver</button>
+    <button id="navBack" class="nav-back" type="button" aria-label="Regresar" hidden>
+      <span class="nav-back-icon">&#8592;</span>
+    </button>
 
     <main class="app-stage">
-      <section id="screen-nombre" class="screen is-active" aria-hidden="false">
+      <section id="screen-nombre" class="screen assistant-screen is-active" aria-hidden="false">
         <div class="screen-background">
           <img data-background-image alt="">
         </div>
         <div class="screen-frame">
           <header class="screen-header">
-            <div class="header-copy">
-              <h1 class="screen-title">¿A nombre de quién?</h1>
+            <div class="header-copy assistant-bubble">
+              <h1 class="screen-title">A nombre de quien?</h1>
+              <label class="field-group" for="inputNombre">
+                <span class="field-label">Nombre del cliente</span>
+                <input id="inputNombre" class="text-input" type="text" placeholder="Escribe el nombre aqui" autocomplete="off">
+              </label>
             </div>
             <button class="history-toggle" type="button" data-history-open>Historial</button>
           </header>
-          <div class="screen-body">
-            <div class="glass-card">
-              <label class="field-group" for="inputNombre">
-                <span class="field-label">Nombre del cliente</span>
-                <input id="inputNombre" class="text-input" type="text" placeholder="Escribe el nombre aquí" autocomplete="off">
-              </label>
-            </div>
-          </div>
+          <div class="screen-body"></div>
           <div class="screen-footer">
             <div class="slider-track" data-slider data-slider-action="next">
               <div class="slider-fill" data-slider-fill></div>
@@ -163,26 +164,22 @@
         </div>
       </section>
 
-      <section id="screen-concepto" class="screen" aria-hidden="true">
+      <section id="screen-concepto" class="screen assistant-screen" aria-hidden="true">
         <div class="screen-background">
           <img data-background-image alt="">
         </div>
         <div class="screen-frame">
           <header class="screen-header">
-            <div class="header-copy">
+            <div class="header-copy assistant-bubble">
               <h1 class="screen-title">Que estas cobrando?</h1>
-            </div>
-            <button class="history-toggle" type="button" data-history-open>Historial</button>
-          </header>
-          <div class="screen-body">
-            <div class="glass-card">
-              <p class="form-note">Usa un concepto corto y claro para que el historial quede facil de leer despues.</p>
               <label class="field-group" for="inputConcepto">
                 <span class="field-label">Concepto</span>
                 <input id="inputConcepto" class="text-input" type="text" placeholder="Ej. Renta, anticipo, materiales" autocomplete="off">
               </label>
             </div>
-          </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body"></div>
           <div class="screen-footer">
             <div class="slider-track" data-slider data-slider-action="next">
               <div class="slider-fill" data-slider-fill></div>
@@ -195,30 +192,26 @@
         </div>
       </section>
 
-      <section id="screen-monto" class="screen" aria-hidden="true">
+      <section id="screen-monto" class="screen assistant-screen" aria-hidden="true">
         <div class="screen-background">
           <img data-background-image alt="">
         </div>
         <div class="screen-frame">
           <header class="screen-header">
-            <div class="header-copy">
+            <div class="header-copy assistant-bubble">
               <h1 class="screen-title">Define el monto</h1>
-            </div>
-            <button class="history-toggle" type="button" data-history-open>Historial</button>
-          </header>
-          <div class="screen-body">
-            <div class="glass-card">
-              <p class="form-note">Ingresa solo numeros y la app normaliza el valor por ti automaticamente.</p>
               <label class="field-group" for="inputMonto">
                 <span class="field-label">Monto</span>
                 <input id="inputMonto" class="text-input" type="text" placeholder="Ej. 2500" inputmode="numeric" autocomplete="off">
               </label>
             </div>
-          </div>
+            <button class="history-toggle" type="button" data-history-open>Historial</button>
+          </header>
+          <div class="screen-body"></div>
           <div class="screen-footer">
             <div class="slider-track" data-slider data-slider-action="next">
               <div class="slider-fill" data-slider-fill></div>
-              <div class="slider-label">Continuar al preview</div>
+              <div class="slider-label">Continuar</div>
               <div class="slider-thumb" data-slider-thumb>
                 <img src="assets/icons/slider-chris.png" alt="">
               </div>
@@ -227,51 +220,26 @@
         </div>
       </section>
 
-      <section id="screen-preview" class="screen" aria-hidden="true">
+      <section id="screen-preview" class="screen assistant-screen" aria-hidden="true">
         <div class="screen-background">
           <img data-background-image alt="">
         </div>
         <div class="screen-frame">
           <header class="screen-header">
-            <div class="header-copy">
-              <h1 class="screen-title">Preview del recibo</h1>
+            <div class="header-copy assistant-bubble">
+              <h1 class="screen-title">Cual es el celular del cliente?</h1>
+              <label class="field-group" for="inputCelular">
+                <span class="field-label">Celular del cliente</span>
+                <input id="inputCelular" class="text-input" type="tel" placeholder="55 1234 5678" inputmode="tel" autocomplete="tel">
+              </label>
             </div>
             <button class="history-toggle" type="button" data-history-open>Historial</button>
           </header>
-          <div class="screen-body preview-layout">
-            <div class="preview-note">Preview visual - no es el output real</div>
-            <div class="receipt-preview-card">
-              <div class="receipt-preview-header">
-                <div class="receipt-brand">
-                  <strong id="previewReceiptBrand">Your CHRIS App</strong>
-                  <span>Plantilla visual del recibo</span>
-                </div>
-                <div class="receipt-meta-tag" id="previewReceiptFolio">Se genera al emitir</div>
-              </div>
-              <div class="receipt-grid two-columns">
-                <div class="receipt-field">
-                  <span>Cliente</span>
-                  <strong id="previewReceiptName">Cliente</strong>
-                </div>
-                <div class="receipt-field">
-                  <span>Fecha</span>
-                  <strong id="previewReceiptDate">-</strong>
-                </div>
-              </div>
-              <div class="receipt-field">
-                <span>Concepto</span>
-                <strong id="previewReceiptConcept">Concepto</strong>
-              </div>
-              <div class="receipt-preview-amount">
-                <span>Monto</span>
-                <strong id="previewReceiptAmount">$0</strong>
-              </div>
-            </div>
-          </div>
+          <div class="screen-body"></div>
           <div class="screen-footer">
             <div class="slider-track" data-slider data-slider-action="next">
               <div class="slider-fill" data-slider-fill></div>
-              <div class="slider-label">Ver recibo listo</div>
+              <div class="slider-label">Continuar</div>
               <div class="slider-thumb" data-slider-thumb>
                 <img src="assets/icons/slider-chris.png" alt="">
               </div>
@@ -326,27 +294,8 @@
                   </div>
                 </div>
               </div>
-              <div class="qr-card">
-                <div class="qr-box" id="qrEmitir"></div>
-                <div class="qr-copy">
-                  <strong>Escanea para validar</strong>
-                  <span id="qrMeta">Este recibo quedara registrado localmente al generarse.</span>
-                </div>
-              </div>
             </div>
 
-            <div class="confirmation-card">
-              <div class="confirmation-highlight">
-                <strong id="confirmSummary">Todavia no hay un recibo generado.</strong>
-                <span id="confirmMeta">Completa el flujo para crear el comprobante.</span>
-                <span id="confirmPremium">Estado premium sin registro</span>
-              </div>
-              <div class="pill-row">
-                <div class="pill">Historial local activo</div>
-                <div class="pill">QR integrado en el cierre</div>
-                <div class="pill">Recibo digital no fiscal</div>
-              </div>
-            </div>
           </div>
           <div class="screen-footer">
             <div class="slider-track" data-slider data-slider-action="next">
@@ -359,7 +308,7 @@
           </div>
         </div>
       </section>
- 
+
       <section id="screen-envio" class="screen" aria-hidden="true">
         <div class="screen-background">
           <img data-background-image alt="">
@@ -372,37 +321,27 @@
             <button class="history-toggle" type="button" data-history-open>Historial</button>
           </header>
           <div class="screen-body share-layout">
-            <div class="confirmation-card share-card">
-              <div class="confirmation-highlight">
-                <strong id="shareSummary">Todavia no hay un recibo listo.</strong>
-                <span id="shareMeta">Completa el flujo para preparar el envio.</span>
-                <span id="sharePremium">Premium se valida solo antes del envio.</span>
+            <div class="share-intro">
+              <strong id="shareSummary">Todavia no hay un recibo listo.</strong>
+              <span id="shareMeta">Completa el flujo para compartirlo.</span>
+            </div>
+            <div class="share-cluster">
+              <div class="share-actions" hidden>
+                <button id="btnWhatsapp" class="cta-button" type="button">Enviar WhatsApp</button>
               </div>
-              <div class="share-actions">
-                <button id="btnWhatsapp" class="cta-button" type="button">Enviar por WhatsApp</button>
-                <p class="premium-inline-note">Si tu premium no esta activa, la app te la pedira justo antes de enviar.</p>
-              </div>
-              <div class="share-summary">
-                <div class="summary-row">
-                  <span>Cliente</span>
-                  <strong id="shareReceiptName">-</strong>
-                </div>
-                <div class="summary-row">
-                  <span>Concepto</span>
-                  <strong id="shareReceiptConcept">-</strong>
-                </div>
-                <div class="summary-row">
-                  <span>Monto</span>
-                  <strong id="shareReceiptAmount">-</strong>
-                </div>
-                <div class="summary-row">
-                  <span>Folio</span>
-                  <strong id="shareReceiptFolio">-</strong>
-                </div>
+              <div class="share-qr-stage" aria-label="Zona central del codigo QR">
+                <div id="qrEmitir" class="share-qr-anchor"></div>
               </div>
             </div>
           </div>
           <div class="screen-footer">
+            <div class="slider-track" data-slider data-slider-action="send-whatsapp">
+              <div class="slider-fill" data-slider-fill></div>
+              <div class="slider-label">Enviar recibo</div>
+              <div class="slider-thumb" data-slider-thumb>
+                <img src="assets/icons/slider-chris.png" alt="">
+              </div>
+            </div>
             <div class="slider-track" data-slider data-slider-action="restart">
               <div class="slider-fill" data-slider-fill></div>
               <div class="slider-label">Crear otro recibo</div>

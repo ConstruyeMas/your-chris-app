@@ -66,7 +66,10 @@
         nombre: "",
         concepto: "",
         monto: "",
-        montoValue: 0
+        montoValue: 0,
+        telefono: "",
+        telefonoDigits: "",
+        telefonoDestino: ""
       },
       currentReceipt: null,
       premium: ChrisApp.premium.normalizePremiumState(ChrisApp.storage.readPremiumState() || {})
@@ -88,7 +91,8 @@
       inputs: {
         nombre: document.getElementById("inputNombre"),
         concepto: document.getElementById("inputConcepto"),
-        monto: document.getElementById("inputMonto")
+        monto: document.getElementById("inputMonto"),
+        telefono: document.getElementById("inputCelular")
       },
       suscripcion: {
         root: document.getElementById("premium-modal"),
@@ -108,14 +112,6 @@
         paymentReference: document.getElementById("premiumPaymentReference"),
         notice: document.getElementById("premiumNotice")
       },
-      preview: {
-        brand: document.getElementById("previewReceiptBrand"),
-        name: document.getElementById("previewReceiptName"),
-        concept: document.getElementById("previewReceiptConcept"),
-        amount: document.getElementById("previewReceiptAmount"),
-        date: document.getElementById("previewReceiptDate"),
-        folio: document.getElementById("previewReceiptFolio")
-      },
       receipt: {
         qr: document.getElementById("qrEmitir"),
         folio: document.getElementById("outputReceiptFolio"),
@@ -133,14 +129,11 @@
         meta: document.getElementById("confirmMeta"),
         premium: document.getElementById("confirmPremium"),
         shareSummary: document.getElementById("shareSummary"),
-        shareMeta: document.getElementById("shareMeta"),
-        sharePremium: document.getElementById("sharePremium"),
-        shareName: document.getElementById("shareReceiptName"),
-        shareConcept: document.getElementById("shareReceiptConcept"),
-        shareAmount: document.getElementById("shareReceiptAmount"),
-        shareFolio: document.getElementById("shareReceiptFolio")
+        shareMeta: document.getElementById("shareMeta")
       }
     };
+
+    renderBackButton("screen-nombre");
 
     const splashScreen = ChrisApp.screens.splash.init({
       splash: elements.splash
@@ -150,29 +143,40 @@
       elements.chrisFloating.image.dataset.currentSrc = elements.chrisFloating.image.getAttribute("src") || "";
     }
 
+    const captureChrisPlacement = Object.freeze({
+      right: "clamp(-40px, -3vw, -18px)",
+      bottom: "clamp(10px, 1.8vh, 22px)",
+      width: "clamp(206px, 31.2vh, 340px)",
+      translateX: "0px",
+      translateY: "0px",
+      rotate: "-1deg"
+    });
+
     const sharedChrisPlacement = Object.freeze({
-      right: "clamp(10px, 2vw, 22px)",
+      right: "clamp(-18px, -1.2vw, -8px)",
       bottom: "clamp(8px, 1.4vh, 14px)",
-      width: "clamp(92px, 10.2vw, 136px)",
+      width: "clamp(220px, 26vw, 320px)",
       translateX: "0px",
       translateY: "0px"
     });
 
+    const finalChrisPlacement = Object.freeze({
+      ...sharedChrisPlacement,
+      width: captureChrisPlacement.width
+    });
+
     const floatingChrisProfiles = Object.freeze({
       "screen-nombre": {
-        ...sharedChrisPlacement,
-        image: "assets/chris/chris-nombre.png",
-        rotate: "-1deg"
+        ...captureChrisPlacement,
+        image: "assets/chris/chris-nombre.png"
       },
       "screen-concepto": {
-        ...sharedChrisPlacement,
-        image: "assets/chris/chris-concepto.png",
-        rotate: "-1deg"
+        ...captureChrisPlacement,
+        image: "assets/chris/chris-concepto.png"
       },
       "screen-monto": {
-        ...sharedChrisPlacement,
-        image: "assets/chris/chris-monto.png",
-        rotate: "-2deg"
+        ...captureChrisPlacement,
+        image: "assets/chris/chris-monto.png"
       },
       "screen-premium": {
         ...sharedChrisPlacement,
@@ -180,18 +184,17 @@
         rotate: "0deg"
       },
       "screen-preview": {
-        ...sharedChrisPlacement,
-        image: "assets/chris/chris-emitir.png",
-        rotate: "2deg"
+        ...captureChrisPlacement,
+        image: "assets/chris/chris-emitir.png"
       },
       "screen-confirmacion": {
-        ...sharedChrisPlacement,
+        ...finalChrisPlacement,
         image: "assets/chris/chris-confirmacion.png",
         rotate: "-1deg"
       },
       "screen-envio": {
-        ...sharedChrisPlacement,
-        image: "assets/chris/chris-confirmacion.png",
+        ...finalChrisPlacement,
+        image: "assets/chris/Repertorio CHRIS/chris-casual.png",
         rotate: "-1deg"
       }
     });
@@ -288,7 +291,10 @@
         return;
       }
 
-      elements.backButton.hidden = screenId === "screen-nombre";
+      const shouldHide = !screenId || screenId === "screen-nombre";
+      elements.backButton.hidden = shouldHide;
+      elements.backButton.style.display = shouldHide ? "none" : "flex";
+      elements.backButton.setAttribute("aria-hidden", String(shouldHide));
     }
 
     let suscripcion = null;
@@ -328,11 +334,6 @@
 
         renderFloatingChris(navigator ? navigator.getCurrentId() : "screen-nombre");
       }
-    });
-
-    const preview = ChrisApp.screens.preview.init({
-      state,
-      elements: elements.preview
     });
 
     const receiptPanel = ChrisApp.screens.qr.init({
@@ -411,10 +412,6 @@
         renderFloatingChris(nextId);
         renderBackButton(nextId);
 
-        if (nextId === "screen-preview") {
-          preview.render();
-        }
-
         if (nextId === "screen-confirmacion" || nextId === "screen-envio") {
           receiptPanel.render();
           confirmacion.render();
@@ -452,6 +449,12 @@
           return;
         }
 
+        if (action === "send-whatsapp") {
+          confirmacion.sendWhatsApp();
+          window.setTimeout(() => sliderInstance.reset(), 260);
+          return;
+        }
+
         const didAdvance = navigator.next();
 
         if (!didAdvance) {
@@ -465,7 +468,11 @@
       sliderInstances.push(sliderInstance);
     });
 
-    [elements.inputs.nombre, elements.inputs.concepto, elements.inputs.monto].forEach((input) => {
+    [elements.inputs.nombre, elements.inputs.concepto, elements.inputs.monto, elements.inputs.telefono].forEach((input) => {
+      if (!input) {
+        return;
+      }
+
       input.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
           event.preventDefault();

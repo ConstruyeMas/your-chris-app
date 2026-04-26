@@ -1,4 +1,4 @@
-const CACHE_NAME = "your-chris-app-shell-v10";
+const CACHE_NAME = "your-chris-app-shell-v12";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -24,6 +24,8 @@ const APP_SHELL = [
   "./screens/qr.js",
   "./screens/confirmacion.js",
   "./assets/chris/chris-avatar.png",
+  "./assets/img/logo.png",
+  "./assets/img/logo-splash.png",
   "./assets/chris/chris-nombre.png",
   "./assets/chris/chris-concepto.png",
   "./assets/chris/chris-monto.png",

@@ -31,7 +31,6 @@
       currency,
       monthlyPriceLabel: `$${monthlyPrice} ${currency} / mes`,
       cycleLabel: `Activacion mensual por ${Number(sharedPremiumPlan.durationDays || 30)} dias`
-    }),
-    whatsappPhone: "521234567890"
+    })
   });
 })(window);

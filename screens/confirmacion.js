@@ -3,13 +3,20 @@
   ChrisApp.screens = ChrisApp.screens || {};
   const receipts = ChrisApp.receipts;
   const storage = ChrisApp.storage;
-  const config = ChrisApp.config;
 
   function initConfirmacion(context) {
     const state = context.state;
     const elements = context.elements;
     const premiumManager = context.premiumManager;
     const requestPremium = typeof context.requestPremium === "function" ? context.requestPremium : null;
+    const freeSendsKey = "your-chris-app.free-sends";
+    const freeSendsLimit = 2;
+
+    function setText(element, value) {
+      if (element) {
+        element.textContent = value;
+      }
+    }
 
     function syncReceipt() {
       if (!state.currentReceipt) {
@@ -21,58 +28,117 @@
       return state.currentReceipt;
     }
 
-    elements.whatsAppButton.addEventListener("click", () => {
+    function readFreeSends() {
+      const count = Number(window.localStorage.getItem(freeSendsKey) || "0");
+      return Number.isFinite(count) && count > 0 ? Math.floor(count) : 0;
+    }
+
+    function incrementFreeSends() {
+      const nextCount = readFreeSends() + 1;
+      window.localStorage.setItem(freeSendsKey, String(nextCount));
+      return nextCount;
+    }
+
+    let sendLock = false;
+
+    function sendWhatsApp() {
+      if (sendLock) {
+        return;
+      }
+
+      sendLock = true;
+
       const receipt = syncReceipt();
 
       if (!receipt) {
+        sendLock = false;
         return;
       }
 
-      if (!premiumManager.canUsePremium()) {
-        if (requestPremium) {
-          requestPremium();
+      const destination = receipts.normalizeWhatsAppPhone(
+        receipt.telefonoDestino
+        || state.form.telefonoDestino
+        || receipt.telefono
+        || state.form.telefono
+      );
+
+      if (!destination) {
+        sendLock = false;
+        return;
+      }
+
+      const isFreemium = !premiumManager.canUsePremium();
+
+      if (isFreemium) {
+        const currentCount = readFreeSends();
+
+        if (currentCount + 1 > freeSendsLimit) {
+          if (requestPremium) {
+            requestPremium();
+          }
+          sendLock = false;
+          return;
         }
-        return;
       }
 
-      const message = receipts.createWhatsAppMessage(receipt);
-      const targetUrl = `https://wa.me/${config.whatsappPhone}?text=${encodeURIComponent(message)}`;
-      window.open(targetUrl, "_blank", "noopener,noreferrer");
-    });
+      const blobPromise = ChrisApp.pdf && ChrisApp.pdf.generateBlob
+        ? ChrisApp.pdf.generateBlob(receipt)
+        : Promise.resolve(null);
+
+      blobPromise.then(function (blob) {
+        if (blob && navigator.canShare && navigator.share) {
+          const file = new File([blob], "recibo-" + receipt.folio + ".pdf", { type: "application/pdf" });
+          const shareData = { files: [file], title: "Recibo", text: "Comprobante digital" };
+
+          if (navigator.canShare(shareData)) {
+            navigator.share(shareData).then(function () {
+              if (isFreemium) {
+                incrementFreeSends();
+              }
+            }).catch(function () {});
+            return;
+          }
+        }
+
+        if (isFreemium) {
+          incrementFreeSends();
+        }
+
+        if (ChrisApp.pdf) {
+          ChrisApp.pdf.generate(receipt);
+        }
+
+        const message = receipts.createWhatsAppMessage(receipt);
+        const targetUrl = "https://wa.me/" + destination + "?text=" + encodeURIComponent(message);
+        window.open(targetUrl, "_blank", "noopener,noreferrer");
+      });
+    }
+
+    elements.whatsAppButton.addEventListener("click", sendWhatsApp);
 
     function render() {
+      sendLock = false;
       const receipt = syncReceipt();
 
       if (!receipt) {
-        elements.summary.textContent = "Todavia no hay un recibo generado.";
-        elements.meta.textContent = "Completa el flujo para crear el comprobante.";
-        elements.premium.textContent = "Estado premium sin registro";
-        elements.shareSummary.textContent = "Todavia no hay un recibo listo.";
-        elements.shareMeta.textContent = "Completa el flujo para preparar el envio.";
-        elements.sharePremium.textContent = "Premium se valida solo antes del envio.";
-        elements.shareName.textContent = "-";
-        elements.shareConcept.textContent = "-";
-        elements.shareAmount.textContent = "-";
-        elements.shareFolio.textContent = "-";
+        setText(elements.summary, "Todavia no hay un recibo generado.");
+        setText(elements.meta, "Completa el flujo para crear el comprobante.");
+        setText(elements.premium, "Estado premium sin registro");
+        setText(elements.shareSummary, "Todavia no hay un recibo listo.");
+        setText(elements.shareMeta, "Completa el flujo para compartirlo.");
         return;
       }
 
-      elements.summary.textContent = `${receipt.nombre} - ${receipt.monto}`;
-      elements.meta.textContent = `${receipt.folio} - ${receipt.fecha}`;
-      elements.premium.textContent = `Estado premium del recibo: ${receipt.premiumStatusLabel}`;
-      elements.shareSummary.textContent = "Todo listo para compartir.";
-      elements.shareMeta.textContent = `${receipt.folio} - ${receipt.fecha}`;
-      elements.sharePremium.textContent = premiumManager.canUsePremium()
-        ? "Premium activa. Ya puedes enviarlo por WhatsApp."
-        : "Premium se solicitara solo cuando confirmes el envio.";
-      elements.shareName.textContent = receipt.nombre;
-      elements.shareConcept.textContent = receipt.concepto;
-      elements.shareAmount.textContent = receipt.monto;
-      elements.shareFolio.textContent = receipt.folio;
+      setText(elements.summary, `${receipt.nombre} - ${receipt.monto}`);
+      setText(elements.meta, `${receipt.folio} - ${receipt.fecha}`);
+      setText(elements.premium, `Estado premium del recibo: ${receipt.premiumStatusLabel}`);
+      setText(elements.shareSummary, "Escanea o comparte el recibo.");
+      setText(elements.shareMeta, `${receipt.folio} - ${receipt.fecha}`);
     }
 
     return {
-      render
+      render,
+      sendWhatsApp
     };
   }
 

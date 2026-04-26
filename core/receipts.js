@@ -29,6 +29,51 @@
     return amount ? formatCurrency(amount) : "";
   }
 
+  function sanitizePhoneDigits(value) {
+    return String(value || "").replace(/[^\d]/g, "");
+  }
+
+  function getMexPhoneDigits(value) {
+    let digits = sanitizePhoneDigits(value);
+
+    if (!digits) {
+      return "";
+    }
+
+    if (digits.startsWith("521") && digits.length > 10) {
+      digits = digits.slice(3);
+    } else if (digits.startsWith("52") && digits.length > 10) {
+      digits = digits.slice(2);
+    } else if (digits.startsWith("1") && digits.length === 11) {
+      digits = digits.slice(1);
+    }
+
+    return digits.slice(0, 10);
+  }
+
+  function formatPhoneInput(value) {
+    const digits = getMexPhoneDigits(value);
+
+    if (!digits) {
+      return "";
+    }
+
+    if (digits.length <= 2) {
+      return digits;
+    }
+
+    if (digits.length <= 6) {
+      return `${digits.slice(0, 2)} ${digits.slice(2)}`;
+    }
+
+    return `${digits.slice(0, 2)} ${digits.slice(2, 6)} ${digits.slice(6, 10)}`;
+  }
+
+  function normalizeWhatsAppPhone(value) {
+    const digits = getMexPhoneDigits(value);
+    return digits.length === 10 ? `52${digits}` : "";
+  }
+
   function formatDate(date) {
     return new Intl.DateTimeFormat(config.locale, {
       dateStyle: "medium",
@@ -42,6 +87,17 @@
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `CHR-${year}${month}${day}-${randomSuffix()}`;
+  }
+
+  function formatCompactFolio(folio) {
+    const match = String(folio || "").match(/^CHR-(\d{4})(\d{2})(\d{2})/);
+
+    if (!match) {
+      return String(folio || "");
+    }
+
+    const [, year, month, day] = match;
+    return `CHR-${year.slice(-2)}${month}/${day}`;
   }
 
   function formatPremiumStatusLabel(status) {
@@ -61,6 +117,8 @@
     const concepto = sanitizeText(formState.concepto);
     const montoValue = Number(formState.montoValue || 0);
     const monto = montoValue ? formatCurrency(montoValue) : "";
+    const telefono = formatPhoneInput(formState.telefono);
+    const telefonoDestino = normalizeWhatsAppPhone(formState.telefonoDestino || formState.telefono);
     const folio = generateFolio(now);
     const id = window.crypto && typeof window.crypto.randomUUID === "function"
       ? window.crypto.randomUUID()
@@ -72,6 +130,8 @@
       folio,
       nombre,
       concepto,
+      telefono,
+      telefonoDestino,
       monto,
       montoValue,
       fecha: formatDate(now),
@@ -89,6 +149,7 @@
       folio: receipt.folio,
       cliente: receipt.nombre,
       concepto: receipt.concepto,
+      celular: receipt.telefono || "",
       monto: receipt.monto,
       fecha: receipt.fecha,
       premium: receipt.premiumStatusLabel,
@@ -132,8 +193,13 @@
     parseAmount,
     formatCurrency,
     formatCurrencyInput,
+    sanitizePhoneDigits,
+    getMexPhoneDigits,
+    formatPhoneInput,
     formatDate,
     formatPremiumStatusLabel,
+    formatCompactFolio,
+    normalizeWhatsAppPhone,
     createReceipt,
     createQrPayload,
     createWhatsAppMessage,

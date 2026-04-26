@@ -10,6 +10,10 @@
     const elements = context.elements;
 
     function renderQr(receipt) {
+      if (!elements.qr) {
+        return;
+      }
+
       const qrPayload = receipts.createQrPayload(receipt);
       elements.qr.innerHTML = "";
 
@@ -41,14 +45,16 @@
     function render() {
       const receipt = ensureReceipt();
 
-      elements.folio.textContent = receipt.folio;
+      elements.folio.textContent = receipts.formatCompactFolio(receipt.folio);
       elements.date.textContent = receipt.fecha;
       elements.name.textContent = receipt.nombre;
       elements.concept.textContent = receipt.concepto;
       elements.amount.textContent = receipt.monto;
       elements.disclaimer.textContent = receipt.disclaimer;
       elements.premiumStatus.textContent = receipt.premiumStatusLabel;
-      elements.qrMeta.textContent = `${config.appName} guarda historial local y conserva el estado premium al momento de emitir.`;
+      if (elements.qrMeta) {
+        elements.qrMeta.textContent = `${config.appName} guarda historial local y conserva el estado premium al momento de emitir.`;
+      }
 
       renderQr(receipt);
     }
